@@ -1,10 +1,11 @@
-import pytest
 from django.test.client import Client
+import pytest
+
 from news.models import News, Comment
 
 
 @pytest.fixture
-def author(django_user_model):  
+def author(django_user_model):
     return django_user_model.objects.create(username='Автор')
 
 
@@ -16,7 +17,7 @@ def author_client(author):
 
 
 @pytest.fixture
-def client(author):
+def client():
     client = Client()
     return client
 

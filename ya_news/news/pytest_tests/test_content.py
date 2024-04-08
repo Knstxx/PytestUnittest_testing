@@ -1,9 +1,9 @@
-import pytest
 from django.urls import reverse
 from django.utils import timezone
+import pytest
+
 from news.models import News, Comment
 from django.test.client import Client
-from django.utils import timezone
 
 
 @pytest.mark.django_db

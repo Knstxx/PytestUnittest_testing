@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+
 from notes.models import Note
 
 User = get_user_model()
@@ -13,15 +14,15 @@ class TestContent(TestCase):
         cls.author = User.objects.create(username='Автор')
         cls.reader = User.objects.create(username='Читатель')
         cls.note_reader = Note.objects.create(title='Заголовок1',
-                                       text='Текст1',
-                                       slug='Slug1',
-                                       author=cls.reader
-                                       )
+                                              text='Текст1',
+                                              slug='Slug1',
+                                              author=cls.reader
+                                              )
         cls.note_author = Note.objects.create(title='Заголовок2',
-                                       text='Текст2',
-                                       slug='Slug2',
-                                       author=cls.author
-                                       )
+                                              text='Текст2',
+                                              slug='Slug2',
+                                              author=cls.author
+                                              )
 
     def test_note_passed_to_note_list_page(self):
         note_list_url = reverse('notes:list')
