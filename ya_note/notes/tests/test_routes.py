@@ -23,7 +23,9 @@ class TestRoutes(TestCase):
 
     def test_home_page(self):
         url = reverse('notes:home')
+
         response = self.client.get(url)
+
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_specific_pages_available_for_author(self):
@@ -42,6 +44,7 @@ class TestRoutes(TestCase):
     def test_pages_available_for_authenticated_user(self):
         self.client.force_login(self.reader)
         pages = ['notes:list', 'notes:add', 'notes:success']
+
         for page in pages:
             with self.subTest(name=page):
                 response = self.client.get(reverse(page))
@@ -68,6 +71,7 @@ class TestRoutes(TestCase):
                  'users:login',
                  'users:logout'
                  ]
+
         for page in pages:
             with self.subTest(name=page):
                 response = self.client.get(reverse(page))
