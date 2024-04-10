@@ -14,20 +14,27 @@ class TestNoteCreation(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.author = User.objects.create(username='Автор')
+        cls.url_detail = reverse('notes:add')
+        cls.user = User.objects.create(username='Гена На')
+        cls.other_user = User.objects.create(username='Другой Гена На')
+        cls.auth_client = Client()
+        cls.other_auth_client = Client()
+        cls.auth_client.force_login(cls.user)
+        cls.other_auth_client.force_login(cls.other_user)
         cls.note = Note.objects.create(title='Заголовок',
                                        text='Текст',
                                        slug='Slug',
-                                       author=cls.author
+                                       author=cls.user
                                        )
-        cls.url_detail = reverse('notes:add')
-        cls.user = User.objects.create(username='Гена На')
-        cls.auth_client = Client()
-        cls.auth_client.force_login(cls.user)
         cls.data_note = {
             'title': 'Заголовок',
             'text': 'Текст',
             'slug': 'Slug2',
             'author': cls.user
+        }
+        cls.up_data_note = {
+            'title': 'Заголовок новый',
+            'text': 'Текст новый',
         }
 
     def test_anonymous_user_cant_create_note(self):
@@ -51,3 +58,29 @@ class TestNoteCreation(TestCase):
         self.auth_client.post(self.url_detail, data=self.data_note)
         latest_note = Note.objects.latest('id')
         self.assertEqual(latest_note.slug, slugify(self.data_note['title']))
+
+    def test_user_can_edit_own_note(self):
+        edit_url = reverse('notes:edit', args=[self.note.slug])
+        self.auth_client.post(edit_url, data=self.up_data_note)
+        self.note.refresh_from_db()
+        self.assertEqual(self.note.title, self.up_data_note['title'])
+        self.assertEqual(self.note.text, self.up_data_note['text'])
+
+    def test_user_cannot_edit_other_users_note(self):
+        edit_url = reverse('notes:edit', args=[self.note.slug])
+        self.other_auth_client.post(edit_url, data=self.up_data_note)
+        self.note.refresh_from_db()
+        self.assertNotEqual(self.note.title, self.up_data_note['title'])
+        self.assertNotEqual(self.note.text, self.up_data_note['text'])
+
+    def test_user_can_delete_own_note(self):
+        delete_url = reverse('notes:delete', args=[self.note.slug])
+        self.auth_client.post(delete_url)
+        note_count = Note.objects.count()
+        self.assertEqual(note_count, 0)
+
+    def test_user_cannot_delete_other_users_note(self):
+        delete_url = reverse('notes:delete', args=[self.note.slug])
+        self.other_auth_client.post(delete_url)
+        note_count = Note.objects.count()
+        self.assertEqual(note_count, 1)

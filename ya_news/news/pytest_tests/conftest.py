@@ -54,7 +54,7 @@ def comment(news, author):
 
 
 @pytest.fixture
-def form_data1():
+def form_data():
     form_data = {'text': 'Текст комментария'}
     return form_data
 

@@ -24,24 +24,26 @@ class TestContent(TestCase):
                                               author=cls.author
                                               )
 
+    def setUp(self):
+        self.client.force_login(self.author)
+
     def test_note_passed_to_note_list_page(self):
         note_list_url = reverse('notes:list')
-        self.client.force_login(self.author)
         response = self.client.get(note_list_url)
         self.assertIn(self.note_author, response.context['object_list'])
 
     def test_only_author_notes_in_user_notes_list(self):
         url = reverse('notes:list')
-        self.client.force_login(self.author)
         response = self.client.get(url)
         self.assertIn(self.note_author, response.context['object_list'])
         self.assertNotIn(self.note_reader, response.context['object_list'])
 
-    def test_forms_passed_to_create_and_edit_pages(self):
+    def test_forms_passed_to_create_pages(self):
         add_url = reverse('notes:add')
-        edit_url = reverse('notes:edit', args=[self.note_author.slug])
-        self.client.force_login(self.author)
         create_response = self.client.get(add_url)
-        edit_response = self.client.get(edit_url)
         self.assertIn('form', create_response.context)
+
+    def test_forms_passed_to_edit_pages(self):
+        edit_url = reverse('notes:edit', args=[self.note_author.slug])
+        edit_response = self.client.get(edit_url)
         self.assertIn('form', edit_response.context)

@@ -1,9 +1,10 @@
+import pytest
 from django.urls import reverse
 from django.utils import timezone
-import pytest
+from django.test.client import Client
 
 from news.models import News, Comment
-from django.test.client import Client
+from yanews.settings import NEWS_COUNT_ON_HOME_PAGE
 
 
 @pytest.mark.django_db
@@ -15,7 +16,7 @@ def test_main_page_news_count(news):
         )
 
     response = Client().get(reverse('news:home'))
-    assert len(response.context['object_list']) <= 10
+    assert len(response.context['object_list']) <= NEWS_COUNT_ON_HOME_PAGE
 
 
 @pytest.mark.django_db
@@ -26,8 +27,10 @@ def test_news_order():
             text=f'Text {i}',
             date=timezone.now() - timezone.timedelta(days=i)
         )
+
     response = Client().get(reverse('news:home'))
     news_dates = [news.date for news in response.context['object_list']]
+
     assert news_dates == sorted(news_dates, reverse=True)
 
 
