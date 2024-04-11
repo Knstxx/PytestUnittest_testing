@@ -39,20 +39,22 @@ class NoteTestCase(TestCase):
 
     def test_anonymous_user_cant_create_note(self):
         note_count = Note.objects.count()
+
         self.client.post(self.url_detail, data=self.data_note)
 
         self.assertEqual(note_count, Note.objects.count())
 
     def test_user_can_create_note(self):
         note_count = Note.objects.count()
+
         self.auth_client.post(self.url_detail, data=self.data_note)
 
         self.assertEqual(note_count + 1, Note.objects.count())
 
     def test_cannot_create_note_with_duplicate_slug(self):
         self.data_note['slug'] = self.note.slug
-
         note_count = Note.objects.count()
+
         self.auth_client.post(self.url_detail, data=self.data_note)
 
         self.assertEqual(note_count, Note.objects.count())
@@ -61,8 +63,8 @@ class NoteTestCase(TestCase):
         del self.data_note['slug']
 
         self.auth_client.post(self.url_detail, data=self.data_note)
-        latest_note = Note.objects.latest('id')
 
+        latest_note = Note.objects.latest('id')
         self.assertEqual(latest_note.slug, slugify(self.data_note['title']))
 
     def test_user_can_edit_own_note(self):
@@ -85,16 +87,16 @@ class NoteTestCase(TestCase):
 
     def test_user_can_delete_own_note(self):
         delete_url = reverse('notes:delete', args=[self.note.slug])
-
         note_count = Note.objects.count()
+
         self.auth_client.post(delete_url)
 
         self.assertEqual(note_count - 1, Note.objects.count())
 
     def test_user_cannot_delete_other_users_note(self):
         delete_url = reverse('notes:delete', args=[self.note.slug])
-
         note_count = Note.objects.count()
+
         self.other_auth_client.post(delete_url)
 
         self.assertEqual(note_count, Note.objects.count())

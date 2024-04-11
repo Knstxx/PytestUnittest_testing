@@ -31,14 +31,12 @@ class TestContent(TestCase):
         note_list_url = reverse('notes:list')
 
         response = self.client.get(note_list_url)
-
         self.assertIn(self.note_author, response.context['object_list'])
 
     def test_only_author_notes_in_user_notes_list(self):
         url = reverse('notes:list')
 
         response = self.client.get(url)
-
         self.assertIn(self.note_author, response.context['object_list'])
         self.assertNotIn(self.note_reader, response.context['object_list'])
 
@@ -46,11 +44,10 @@ class TestContent(TestCase):
         add_url = reverse('notes:add')
 
         create_response = self.client.get(add_url)
-
         self.assertIn('form', create_response.context)
 
     def test_forms_passed_to_edit_pages(self):
         edit_url = reverse('notes:edit', args=[self.note_author.slug])
-        edit_response = self.client.get(edit_url)
 
+        edit_response = self.client.get(edit_url)
         self.assertIn('form', edit_response.context)
