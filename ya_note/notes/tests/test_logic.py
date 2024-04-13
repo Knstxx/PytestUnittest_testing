@@ -71,8 +71,8 @@ class NoteTestCase(TestCase):
         edit_url = reverse('notes:edit', args=[self.note.slug])
 
         self.auth_client.post(edit_url, data=self.up_data_note)
-        self.note.refresh_from_db()
 
+        self.note.refresh_from_db()
         self.assertEqual(self.note.title, self.up_data_note['title'])
         self.assertEqual(self.note.text, self.up_data_note['text'])
 
@@ -80,8 +80,8 @@ class NoteTestCase(TestCase):
         edit_url = reverse('notes:edit', args=[self.note.slug])
 
         self.other_auth_client.post(edit_url, data=self.up_data_note)
-        self.note.refresh_from_db()
 
+        self.note.refresh_from_db()
         self.assertNotEqual(self.note.title, self.up_data_note['title'])
         self.assertNotEqual(self.note.text, self.up_data_note['text'])
 

@@ -55,8 +55,8 @@ def test_user_cant_use_bad_words(author_client, news):
 @pytest.mark.django_db
 def test_users_can_delete_comment(name, par_client, delta_count, comment):
     comments_count = Comment.objects.count()
-
     delete_url = reverse(name, args=[comment.id])
+
     par_client.delete(delete_url)
 
     assert Comment.objects.count() == comments_count - delta_count
@@ -81,7 +81,8 @@ def test_author_can_edit_comment(name,
                                  comment
                                  ):
     edit_url = reverse(name, args=[comment.id])
-    par_client.post(edit_url, data=new_form_data)
-    comment.refresh_from_db()
 
+    par_client.post(edit_url, data=new_form_data)
+
+    comment.refresh_from_db()
     assert comment.text == expected_answ
