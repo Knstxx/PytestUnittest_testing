@@ -1,4 +1,4 @@
-# BreadcrumbsPytest_Unittest_testing
+# Pytest_Unittest_testing
 О проекте:
 1. Отдельные наборы тестов для Django проекта из Pytest и Unittest frameworks с применением собственных fixtures.
 3. Над проектом работали:
