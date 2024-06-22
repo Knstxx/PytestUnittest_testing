@@ -2,7 +2,7 @@
 О проекте:
 1. Отдельные наборы тестов для Django проекта из Pytest и Unittest frameworks с применением собственных fixtures.
 3. Над проектом работали:
-<a href="https://github.com/Knstxx" target="_blank">Константин</a>
+<a href="https://github.com/Knstxx" target="_blank">Konstantin Khotnog</a>
 
 Покрытие тестами Django проекта составило 96%.
 
